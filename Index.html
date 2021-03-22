@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <style>
+        .container {
+            margin: 40px auto;
+            width: 400px;
+            border: 2px solid #000;
+            text-align: center;
+            padding: 10px 0 10px 0;
+        }
+        h1 {
+            margin-top: 0px;
+            font-weight: bold;
+        }
+        table {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body onload="getCurrency()">
+    
+    <div class="container">
+        <h1>Currency Converter</h1>
+        <table>
+            <tr>
+                <td>
+                    <input type="number" size="15" value="1" id="fromAmount" onkeyup="getCurrency()">
+                </td>
+                <td>
+                    <select id="from" onchange="getCurrency()">
+                        <option value="AUD">Australian Dollar (AUD)</option>
+                        <option value="BGN">Bulgarian Lev (BGN)</option>
+                        <option value="CAD">Canadian Dollar (CAD)</option>
+                        <option value="CHF">Swiss Franc (CHF)</option>
+                        <option value="DKK">Danish Krone (DKK)</option>
+                        <option value="GBP">Pound Sterling (GBP)</option>
+                        <option value="ILS">Israeli New Shekel (ILS)</option>
+                        <option value="INR">Indian Rupee (INR)</option>
+                        <option value="JPY">Japanese Yen (JPY)</option>
+                        <option value="PHP">Philippine Peso (PHP)</option>
+                        <option value="RUB">Russian Ruble (RUB)</option>
+                        <option value="USD">US Dollar (USD)</option>
+                        <option value="MMK" selected>Kyat (MMK)</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="number" size="15" disabled id="toAmount">
+                </td>
+                <td>
+                    <select id="to" onchange="getCurrency()">
+                        <option value="AUD">Australian Dollar (AUD)</option>
+                        <option value="BGN">Bulgarian Lev (BGN)</option>
+                        <option value="CAD">Canadian Dollar (CAD)</option>
+                        <option value="CHF">Swiss Franc (CHF)</option>
+                        <option value="DKK">Danish Krone (DKK)</option>
+                        <option value="GBP">Pound Sterling (GBP)</option>
+                        <option value="ILS">Israeli New Shekel (ILS)</option>
+                        <option value="INR">Indian Rupee (INR)</option>
+                        <option value="JPY">Japanese Yen (JPY)</option>
+                        <option value="PHP">Philippine Peso (PHP)</option>
+                        <option value="RUB">Russian Ruble (RUB)</option>
+                        <option value="USD" selected>US Dollar (USD)</option>
+                        <option value="MMK">Kyat (MMK)</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        function getCurrency() {
+            var from = document.getElementById('from').value;
+            var to = document.getElementById('to').value;
+            var url = "http://data.fixer.io/api/latest?access_key=52265572afd390d9410f57a31bf5352b&symbols=" + from + "," + to;
+            const xmlHttpRequest = new XMLHttpRequest();
+            xmlHttpRequest.open('get', url, true);
+            xmlHttpRequest.send()
+            xmlHttpRequest.onreadystatechange = function() {
+                if(this.readyState == XMLHttpRequest.DONE && this.status == 200)
+                {
+                    var jsonValue = JSON.parse(xmlHttpRequest.responseText);
+                    var jsonFrom = jsonValue.rates[from];
+                    var jsonTo = jsonValue.rates[to];
+                    var oneUnit = jsonTo/jsonFrom;
+                    var multiplication = document.getElementById('fromAmount').value;
+                    var toAmount = oneUnit * multiplication;
+                    document.getElementById('toAmount').value = toAmount.toFixed(2);
+                }
+            };
+        }
+    </script>
+
+</body>
+</html>
